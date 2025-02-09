@@ -1,13 +1,11 @@
 import os
-os.environ["QT_QPA_PLATFORM"] = "offscreen"  # Force offscreen rendering for headless CI
-
-import sys
 from pathlib import Path
 import shutil  # Required for monkeypatching
 
 import pytest
 
 # Ensure the repository root is in the module search path.
+import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from env_manager import (
@@ -24,8 +22,12 @@ from env_manager import (
 # ----------------------------------------------------------------------
 @pytest.mark.asyncio
 async def test_scan_venv_dirs(tmp_path, monkeypatch):
-    # Create a fake venv directory with a pyvenv.cfg file.
-    fake_venv_dir = tmp_path / "venv_test"
+    # Create the directory that scan_venv_dirs() is expected to search:
+    fake_virtualenvs = tmp_path / ".virtualenvs"
+    fake_virtualenvs.mkdir()
+
+    # Create a fake venv directory under .virtualenvs with a pyvenv.cfg file.
+    fake_venv_dir = fake_virtualenvs / "venv_test"
     fake_venv_dir.mkdir()
     (fake_venv_dir / "pyvenv.cfg").write_text("home = /usr/bin")
 
