@@ -1,10 +1,11 @@
 import sys
 from pathlib import Path
+import shutil  # Added import for shutil
+
+import pytest
 
 # Ensure the repository root is in the module search path.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-
-import pytest
 
 # Import functions and classes from your module.
 from env_manager import (
@@ -15,7 +16,6 @@ from env_manager import (
     is_current_env,
     delete_environment,
 )
-
 
 # ----------------------------------------------------------------------
 # Test scanning for standard virtual environments (venv/virtualenv)
@@ -35,7 +35,6 @@ async def test_scan_venv_dirs(tmp_path, monkeypatch):
     # Check that our fake environment is found.
     names = [env.name for env in envs]
     assert fake_venv_dir.name in names
-
 
 # ----------------------------------------------------------------------
 # Test scanning for in-project virtual environment (.venv)
@@ -57,7 +56,6 @@ async def test_scan_current_dir_venv(tmp_path, monkeypatch):
     assert envs[0].env_type == "venv (local)"
     assert project_dir.name == envs[0].name
 
-
 # ----------------------------------------------------------------------
 # Test is_current_env function.
 # ----------------------------------------------------------------------
@@ -70,7 +68,6 @@ def test_is_current_env(tmp_path):
     # is_current_env should return False.
     result = is_current_env(str(fake_env))
     assert result is False
-
 
 # ----------------------------------------------------------------------
 # Test deletion of a virtual environment.
@@ -89,7 +86,6 @@ async def test_delete_environment(tmp_path):
     success, message = await delete_environment(env)
     assert success, f"Deletion failed: {message}"
     assert not fake_env.exists()
-
 
 # ----------------------------------------------------------------------
 # Test scanning for Conda environments in manual mode.
