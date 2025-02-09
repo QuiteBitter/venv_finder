@@ -1,17 +1,15 @@
 import os
-os.environ["QT_QPA_PLATFORM"] = "offscreen"
-
+os.environ["QT_QPA_PLATFORM"] = "offscreen"  # Force offscreen rendering for headless CI
 
 import sys
 from pathlib import Path
-import shutil  # Added import for shutil
+import shutil  # Required for monkeypatching
 
 import pytest
 
 # Ensure the repository root is in the module search path.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-# Import functions and classes from your module.
 from env_manager import (
     Environment,
     scan_venv_dirs,
