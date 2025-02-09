@@ -1,6 +1,9 @@
 [project]
 name = "venv-finder"
 version = "0.1.0"
-description = "Add your description here"
+description = "A simple Qt6 GUI for finding venv"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "PySide6",
+    "qasync"
+]
