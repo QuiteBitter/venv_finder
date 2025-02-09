@@ -8,6 +8,9 @@ import pytest
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+# Set Qt to use offscreen rendering for headless CI.
+os.environ["QT_QPA_PLATFORM"] = "offscreen"
+
 from env_manager import (
     Environment,
     scan_venv_dirs,

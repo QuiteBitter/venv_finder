@@ -17,8 +17,8 @@ from typing import List, Tuple
 
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QSplitter,
-    QVBoxLayout, QHBoxLayout, QFormLayout, QPushButton,
-    QTableView, QMessageBox, QLineEdit, QLabel, QToolBar, QStatusBar, QAbstractItemView
+    QFormLayout, QTableView, QMessageBox, QLineEdit, QLabel,
+    QToolBar, QStatusBar, QAbstractItemView
 )
 from PySide6.QtCore import Qt, QAbstractTableModel, QModelIndex, QTimer, QSortFilterProxyModel
 from PySide6.QtGui import QIcon, QAction
@@ -171,10 +171,11 @@ class MainWindow(QMainWindow):
         else:
             self.details_panel.clear_details()
 
-    def on_refresh_clicked(self):
+    # Updated slot to accept optional parameter (to handle signal extra parameter)
+    def on_refresh_clicked(self, checked: bool = False):
         asyncio.create_task(self.refresh_environments())
 
-    def on_delete_clicked(self):
+    def on_delete_clicked(self, checked: bool = False):
         asyncio.create_task(self.delete_selected())
 
     async def refresh_environments(self):
@@ -312,7 +313,7 @@ def is_current_env(env_path: str) -> bool:
     """Return True if env_path is the one running this application."""
     try:
         return Path(sys.executable).resolve().as_posix().startswith(Path(env_path).resolve().as_posix())
-    except Exception:
+    except (OSError, RuntimeError):
         return False
 
 async def delete_environment(env: Environment) -> Tuple[bool, str]:
