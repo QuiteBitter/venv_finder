@@ -1,3 +1,7 @@
+import os
+os.environ["QT_QPA_PLATFORM"] = "offscreen"
+
+
 import sys
 from pathlib import Path
 import shutil  # Added import for shutil
