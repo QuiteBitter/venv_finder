@@ -1,15 +1,12 @@
-# test_env_manager.py
-
-import os
-import shutil
-import subprocess
-import asyncio
+import sys
 from pathlib import Path
+
+# Ensure the repository root is in the module search path.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import pytest
 
 # Import functions and classes from your module.
-# Adjust the import if your module is named differently.
 from env_manager import (
     Environment,
     scan_venv_dirs,
@@ -18,6 +15,7 @@ from env_manager import (
     is_current_env,
     delete_environment,
 )
+
 
 # ----------------------------------------------------------------------
 # Test scanning for standard virtual environments (venv/virtualenv)
@@ -29,8 +27,7 @@ async def test_scan_venv_dirs(tmp_path, monkeypatch):
     fake_venv_dir.mkdir()
     (fake_venv_dir / "pyvenv.cfg").write_text("home = /usr/bin")
 
-    # Create a fake directory structure that the scanning function uses.
-    # Our function uses Path.home(), so we monkey-patch it to return tmp_path.
+    # Monkey-patch Path.home() to return tmp_path.
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
 
     envs = await scan_venv_dirs()
@@ -38,6 +35,7 @@ async def test_scan_venv_dirs(tmp_path, monkeypatch):
     # Check that our fake environment is found.
     names = [env.name for env in envs]
     assert fake_venv_dir.name in names
+
 
 # ----------------------------------------------------------------------
 # Test scanning for in-project virtual environment (.venv)
@@ -59,6 +57,7 @@ async def test_scan_current_dir_venv(tmp_path, monkeypatch):
     assert envs[0].env_type == "venv (local)"
     assert project_dir.name == envs[0].name
 
+
 # ----------------------------------------------------------------------
 # Test is_current_env function.
 # ----------------------------------------------------------------------
@@ -71,6 +70,7 @@ def test_is_current_env(tmp_path):
     # is_current_env should return False.
     result = is_current_env(str(fake_env))
     assert result is False
+
 
 # ----------------------------------------------------------------------
 # Test deletion of a virtual environment.
@@ -89,6 +89,7 @@ async def test_delete_environment(tmp_path):
     success, message = await delete_environment(env)
     assert success, f"Deletion failed: {message}"
     assert not fake_env.exists()
+
 
 # ----------------------------------------------------------------------
 # Test scanning for Conda environments in manual mode.
