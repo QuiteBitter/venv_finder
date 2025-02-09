@@ -106,6 +106,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.repomixignore
 
 # Spyder project settings
 .spyderproject
@@ -124,7 +125,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-
+repomix.config.json
 # pytype static type analyzer
 .pytype/
 
